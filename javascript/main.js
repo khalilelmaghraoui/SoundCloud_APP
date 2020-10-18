@@ -132,7 +132,11 @@ soundcloudAPI.getEmbed = function(TrackUrl) {
     }).then(function(embed) {
         console.log('oEmbed response: ', embed);
         var SideBar = document.querySelector('.js-playlist');
-        SideBar.innerHTML = embed.html;
+
+
+        var box = document.createElement('div');
+        box.innerHTML = embed.html;
+        SideBar.insertBefore(box, SideBar.firstChild);
     });
 
 }
