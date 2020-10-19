@@ -1,6 +1,35 @@
 //### search for music ###//
 
+var UI = {};
 
+UI.submetClick = document.querySelector(".search").addEventListener('click', function() {
+
+    var serachInput = document.querySelector("input").value;
+    soundcloudAPI.getTrack(serachInput);
+
+    // clear the previous search resulats
+
+    var SearchResults = document.querySelector(".js-search-results")
+
+    SearchResults.innerHTML = " ";
+
+})
+UI.EnterPress = document.querySelector(".search").addEventListener('keyup', function(e) {
+
+    var serachInput = document.querySelector("input").value;
+    if (e.which == 13) {
+        soundcloudAPI.getTrack(serachInput);
+
+        var SearchResults = document.querySelector(".js-search-results")
+
+        SearchResults.innerHTML = " ";
+    }
+
+
+    // clear the previous search resulats
+
+
+})
 
 
 
@@ -22,10 +51,10 @@ soundcloudAPI.init = function() {
 }
 soundcloudAPI.init();
 
-soundcloudAPI.getTrack = function(inputvalue) {
+soundcloudAPI.getTrack = function(te) {
     // find all sounds of buskers licensed under 'creative commons share alike'
     SC.get('/tracks', {
-        q: inputvalue,
+        q: te,
         license: 'cc-by-sa'
     }).then(function(tracks) {
         console.log(tracks);
@@ -103,9 +132,6 @@ soundcloudAPI.renderTracks = function(tracks) {
         card.appendChild(content);
         card.appendChild(botton);
 
-
-
-
         var serachresults = document.querySelector(".js-search-results");
 
 
@@ -113,12 +139,6 @@ soundcloudAPI.renderTracks = function(tracks) {
 
 
     });
-
-
-
-
-
-
 
 }
 
@@ -128,7 +148,7 @@ soundcloudAPI.getEmbed = function(TrackUrl) {
     //### add to playlist and play ###//
     //Embedding
     SC.oEmbed(TrackUrl, {
-        auto_play: true
+        auto_play: false
     }).then(function(embed) {
         console.log('oEmbed response: ', embed);
         var SideBar = document.querySelector('.js-playlist');
@@ -137,10 +157,19 @@ soundcloudAPI.getEmbed = function(TrackUrl) {
         var box = document.createElement('div');
         box.innerHTML = embed.html;
         SideBar.insertBefore(box, SideBar.firstChild);
+        localStorage.setItem("key", SideBar.innerHTML);
     });
 
 }
 
+var SideBar = document.querySelector('.js-playlist');
+
+SideBar.innerHTML = localStorage.getItem("key");
+UI.ClearPlaylist = document.querySelector(".btn-reset").addEventListener('click', function() {
+
+    localStorage.clear();
+    location.reload();
+});
 
 
 
